@@ -24,14 +24,20 @@ This project applies an unsupervised Autoencoder model to detect fraudulent tran
 - **Compilation**: The model is compiled with Mean Squared Error loss, commonly used for reconstruction tasks.
 
   ```python
-  # Sample code for Autoencoder architecture
-  model = Sequential([
-      Dense(32, activation='relu', input_shape=(input_dim,)),
-      Dense(16, activation='relu'),
-      Dense(32, activation='relu'),
-      Dense(input_dim, activation='sigmoid')
-  ])
-  model.compile(optimizer='adam', loss='mse')
+input_dim = X_train.shape[1]
+
+# Define the Autoencoder model
+input_layer = Input(shape=(input_dim,))
+encoder = Dense(14, activation="relu")(input_layer)
+encoder = Dense(7, activation="relu")(encoder)
+encoder = Dense(5, activation="relu")(encoder)
+decoder = Dense(7, activation="relu")(encoder)
+decoder = Dense(14, activation="relu")(decoder)
+decoder = Dense(input_dim, activation="sigmoid")(decoder)
+
+autoencoder = Model(inputs=input_layer, outputs=decoder)
+autoencoder.compile(optimizer=Adam(learning_rate=0.001), loss='mse')
+autoencoder.summary()
   ```
 
 ### 3. Model Training
